@@ -45,6 +45,7 @@ public class EdgeWeightedDigraph {
            String[] a = in.nextLine().split(",");
            gasPrice.put(a[0], Double.parseDouble(a[1]));
     	}
+    	in.close();
     	ArrayList<String> sharedStates = new ArrayList<String>();
     	for (String a : A.getState() ){
     		if (B.getState().contains(a)){

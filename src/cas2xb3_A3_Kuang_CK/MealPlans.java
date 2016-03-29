@@ -29,8 +29,12 @@ public class MealPlans implements Comparable<MealPlans> {
 		return mealName;
 	}
 	
+	public Double getPrice(){
+		return price;
+	}
+	
 	public String toString(){
-		return (place +" - "+ mealName+" - $"+price);
+		return (place +" - "+ mealName);
 	}
 
 }

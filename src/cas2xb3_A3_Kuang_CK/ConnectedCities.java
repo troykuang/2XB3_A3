@@ -150,7 +150,7 @@ public class ConnectedCities {
     				queue.add(child.getName());
     				edgeTo.put(child.getName(), st.get(current));
     				visited.add(child.getName());
-    			}
+    			} 
     		}		
     	}
 
@@ -166,7 +166,57 @@ public class ConnectedCities {
    	   System.out.print(e.from()+"->"+e.to()+",");
       }
       System.out.println();
+      MinPQ<MealPlans> minMeals = new MinPQ<MealPlans>();
+     
+      ArrayList<Restaurant> BK = new ArrayList<Restaurant>();
+      ArrayList<Restaurant> WD = new ArrayList<Restaurant>();
+      ArrayList<Restaurant> MD = new ArrayList<Restaurant>();
       
+      Scanner bk = new Scanner(new File(("data/burgerking.csv")));
+      Scanner wd = new Scanner(new File(("data/wendys.csv")));
+      Scanner md = new Scanner(new File(("data/mcdonalds.csv")));
+      
+      while (bk.hasNextLine()){
+    	  Restaurant current = new Restaurant(bk.nextLine());
+    	  BK.add(current);
+      }
+      bk.close();
+      
+      while (wd.hasNextLine()){
+    	  Restaurant current = new Restaurant(wd.nextLine());
+    	  WD.add(current);
+      }
+      wd.close();
+      while (md.hasNextLine()){
+    	  Restaurant current = new Restaurant(md.nextLine());
+    	  MD.add(current);
+      }
+      md.close();
+      
+      Scanner in = new Scanner(new File(("data/menu.csv")));
+      while (in.hasNextLine()) {
+    	  MealPlans currentMeal = new MealPlans(in.nextLine());
+    	  minMeals.insert(currentMeal);
+    	  }
+      Double currentGas = 0.0;
+      String cityName = "SAN FRANCISCO";
+      Double costOfMeal = 0.0;
+      Double totalCost = 0.0;
+      Double currentTotal = currentGas + costOfMeal;
+      System.out.printf("%-15s%-70s%-15s%-15s%-15s","City","Meal Choice","Cost of Meal","Cost of Fuel","Total Cost");
+      System.out.println();
+      System.out.printf("%-15s%-70s%-15s%-15s%-15s",cityName,"N/A",costOfMeal,currentGas,currentTotal);
+      System.out.println();
+      for(DirectedEdge e:shortestpath.pathTo("MIAMI")){
+    	  cityName = e.to();
+    	  MealPlans currentMeal = minMeals.delMin();
+    	  costOfMeal = currentMeal.getPrice();
+    	  currentGas = ((int)(e.weight()*100))/100.0;
+    	  currentTotal = costOfMeal+currentGas;
+    	  totalCost += currentTotal;
+    	  System.out.printf("%-15s%-70s%-15s%-15s%-15s%-15s",cityName,currentMeal,costOfMeal,currentGas,currentTotal,totalCost);
+    	  System.out.println();
+      }
       
 
     	
