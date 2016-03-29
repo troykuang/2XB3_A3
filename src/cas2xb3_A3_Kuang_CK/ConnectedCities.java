@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +18,7 @@ public class ConnectedCities {
 	
 	private int V;               //number of vertices
 	private int E;                     //number of edges
-	private static ST<String, City> st; // City name-> City Object
+	public static ST<String, City> st; // City name-> City Object
 //	private City[] cities;  // index -> City
 	private EdgeWeightedDigraph G;
 	
@@ -138,7 +140,6 @@ public class ConnectedCities {
     }
 
     private static void bfs(EdgeWeightedDigraph G, String src,ArrayList<String> visited, ST<String,City> edgeTo){
-        // TODO: Verify the connectivity of the graph from src iteratively.
     	Queue<String> queue = new ArrayDeque<String>();
     	queue.add(src);
     	visited.add(src);
@@ -156,13 +157,38 @@ public class ConnectedCities {
 
     }
     
-  public static void main(String[] args) throws FileNotFoundException {
+  public static String getRestaurantInfo(String cityName, ArrayList<Restaurant> places){
+	  Double cityLon = st.get(cityName).getLongitude();
+	  Double cityLat = st.get(cityName).getLatitude();
+	  for (Restaurant current : places){
+		  Double restLon = current.getLon();
+		  Double restLat = current.getLat();
+		  if ((Math.abs(cityLon-restLon) <= 0.5) && (Math.abs(cityLat-restLat) <= 0.5)){
+			  return current.getAddNStateNTele();
+		  }
+	  }
+	  return null;
+  }
+    
+  public static void main(String[] args) throws IOException {
+	  PrintWriter writer = new PrintWriter("a3_out.txt");
+	  
 	  ConnectedCities a = new ConnectedCities("data/connectedCities.txt");
 	  EdgeWeightedDigraph G = new EdgeWeightedDigraph(ConnectedCities.st.size(),a.st);
-      System.out.println(DFS(G, "NEW YORK CITY", "MIAMI"));
-      System.out.println(BFS(G, "NEW YORK CITY", "SAN FRANCISCO"));
-      DijkstraSP shortestpath=new DijkstraSP(G,"SAN FRANCISCO");
-      for(DirectedEdge e:shortestpath.pathTo("MIAMI")){
+	  BufferedReader input = new BufferedReader(new FileReader(("data/a3_in.txt")));
+	  String src = input.readLine().toUpperCase();
+	  String des = input.readLine().toUpperCase();
+	  input.close();
+	  
+	  
+      System.out.println(DFS(G, src, des));
+      String dfsR = DFS(G, src, des).toString();
+      writer.println("DFS: "+dfsR.substring(1, dfsR.length()-1));
+      System.out.println(BFS(G, src, des));
+      String bfsR = BFS(G, src, des).toString();
+      writer.println("BFS: "+bfsR.substring(1, bfsR.length()-1));
+      DijkstraSP shortestpath=new DijkstraSP(G,src);
+      for(DirectedEdge e:shortestpath.pathTo(des)){
    	   System.out.print(e.from()+"->"+e.to()+",");
       }
       System.out.println();
@@ -199,25 +225,45 @@ public class ConnectedCities {
     	  minMeals.insert(currentMeal);
     	  }
       Double currentGas = 0.0;
-      String cityName = "SAN FRANCISCO";
+      String cityName = src;
       Double costOfMeal = 0.0;
       Double totalCost = 0.0;
+      Double totalMealCost = 0.0;
+      Double totalFuelCost = 0.0;
       Double currentTotal = currentGas + costOfMeal;
-      System.out.printf("%-15s%-70s%-15s%-15s%-15s","City","Meal Choice","Cost of Meal","Cost of Fuel","Total Cost");
+      String restInfo;
+      System.out.printf("%-15s%-70s%-15s%-15s%-15s","City","Meal Choice","Cost of Meal","Cost of Fuel","Current Total Cost");
       System.out.println();
       System.out.printf("%-15s%-70s%-15s%-15s%-15s",cityName,"N/A",costOfMeal,currentGas,currentTotal);
       System.out.println();
       for(DirectedEdge e:shortestpath.pathTo("MIAMI")){
     	  cityName = e.to();
     	  MealPlans currentMeal = minMeals.delMin();
+    	  char name = currentMeal.getMealName().charAt(0);
+    	  if (name == 'M'){
+    		  restInfo = getRestaurantInfo(cityName, MD);
+    	  }
+    	  else if (name == 'W'){
+    		  restInfo = getRestaurantInfo(cityName, WD);
+    	  }
+    	  else{
+    		  restInfo = getRestaurantInfo(cityName, BK);
+    	  }
+    	  
     	  costOfMeal = currentMeal.getPrice();
+    	  totalMealCost += costOfMeal;
     	  currentGas = ((int)(e.weight()*100))/100.0;
+    	  totalFuelCost += currentGas;
     	  currentTotal = costOfMeal+currentGas;
     	  totalCost += currentTotal;
-    	  System.out.printf("%-15s%-70s%-15s%-15s%-15s%-15s",cityName,currentMeal,costOfMeal,currentGas,currentTotal,totalCost);
+    	  System.out.printf("%-15s%-70s%-15s%-15s%.2f",cityName,currentMeal,costOfMeal,currentGas,currentTotal);
+    	  System.out.println();
+    	  System.out.printf("%-15s%-15s","",restInfo);
     	  System.out.println();
       }
-      
+      System.out.printf("%-85s%-15s%-15s%.2f","Total:",totalMealCost,totalFuelCost,totalCost);
+      System.out.println();
+      writer.close();
 
     	
     	
