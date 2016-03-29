@@ -57,14 +57,16 @@ public class ConnectedCities {
 //    	 }
     	 
  
-       G = new EdgeWeightedDigraph(st.size(),st);
-       System.out.println(DFS(G, "NEW YORK CITY", "SAN FRANCISCO"));
-       System.out.println(BFS(G, "NEW YORK CITY", "SAN FRANCISCO"));
-       DijkstraSP shortestpath=new DijkstraSP(G,"SAN FRANCISCO");
-       for(DirectedEdge e:shortestpath.pathTo("NEW YORK CITY")){
-    	   System.out.print(e.from()+"->"+e.to()+",");
-       }
-       System.out.println();
+//       G = new EdgeWeightedDigraph(st.size(),st);
+//       System.out.println(DFS(G, "NEW YORK CITY", "SAN FRANCISCO"));
+//       System.out.println(BFS(G, "NEW YORK CITY", "SAN FRANCISCO"));
+//       DijkstraSP shortestpath=new DijkstraSP(G,"SAN FRANCISCO");
+//       for(DirectedEdge e:shortestpath.pathTo("NEW YORK CITY")){
+//    	   System.out.print(e.from()+"->"+e.to()+",");
+//       }
+//       System.out.println();
+ 
+       
        
 //       for (DirectedEdge currentEdge: G.allEdges()){
 //    	   System.out.println(currentEdge.from()+" "+st.get(currentEdge.from()).getLongitude()+" "+st.get(currentEdge.from()).getLatitude());
@@ -149,15 +151,24 @@ public class ConnectedCities {
     				edgeTo.put(child.getName(), st.get(current));
     				visited.add(child.getName());
     			}
-    		}
-    		
-    		
+    		}		
     	}
 
     }
     
   public static void main(String[] args) throws FileNotFoundException {
 	  ConnectedCities a = new ConnectedCities("data/connectedCities.txt");
+	  EdgeWeightedDigraph G = new EdgeWeightedDigraph(ConnectedCities.st.size(),a.st);
+      System.out.println(DFS(G, "NEW YORK CITY", "MIAMI"));
+      System.out.println(BFS(G, "NEW YORK CITY", "SAN FRANCISCO"));
+      DijkstraSP shortestpath=new DijkstraSP(G,"SAN FRANCISCO");
+      for(DirectedEdge e:shortestpath.pathTo("MIAMI")){
+   	   System.out.print(e.from()+"->"+e.to()+",");
+      }
+      System.out.println();
+      
+      
+
     	
     	
     	

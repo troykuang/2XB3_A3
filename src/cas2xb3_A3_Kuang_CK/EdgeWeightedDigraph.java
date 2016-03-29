@@ -4,6 +4,7 @@ package cas2xb3_A3_Kuang_CK;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -19,9 +20,10 @@ public class EdgeWeightedDigraph {
      * Initializes an empty edge-weighted digraph with <tt>V</tt> vertices and 0 edges.
      *
      * @param  V the number of vertices
+     * @throws FileNotFoundException 
      * @throws IllegalArgumentException if <tt>V</tt> < 0
      */
-    public EdgeWeightedDigraph(int V, ST<String, City> st) {
+    public EdgeWeightedDigraph(int V, ST<String, City> st) throws FileNotFoundException {
         if (V < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
         this.V = V;
         this.E = 0;
@@ -30,14 +32,47 @@ public class EdgeWeightedDigraph {
         for (String currentCity:st.cityNames()){
         	for (City B: st.get(currentCity).adj){
         		double weight = distance2B(st.get(currentCity),B);
-        		addEdge(new DirectedEdge(currentCity, B.getName(), weight*getGasPrice(st.get(currentCity), B)));
-        		addEdge(new DirectedEdge(B.getName(),currentCity, weight*getGasPrice(B,st.get(currentCity))));
+        		addEdge(new DirectedEdge(currentCity, B.getName(), (weight/100)*8.2*getGasPrice(st.get(currentCity), B)));
+        		addEdge(new DirectedEdge(B.getName(), currentCity, (weight/100)*8.2*getGasPrice(B ,st.get(currentCity))));
         	}
         }
     }
     
-    private double getGasPrice(City A,City B){
-    	return 0.0;
+    private double getGasPrice(City A,City B) throws FileNotFoundException{
+    	ST<String,Double> gasPrice = new ST<String,Double>();
+    	Scanner in = new Scanner(new File(("data/StateGasPrice.csv")));
+    	while (in.hasNextLine()) {
+           String[] a = in.nextLine().split(",");
+           gasPrice.put(a[0], Double.parseDouble(a[1]));
+    	}
+    	ArrayList<String> sharedStates = new ArrayList<String>();
+    	for (String a : A.getState() ){
+    		if (B.getState().contains(a)){
+    			sharedStates.add(a);
+    		}
+    	}
+    	int numberOfStates = 0;
+		double totalPrice = 0.0;
+    	if (sharedStates.size() == 0){
+    		numberOfStates = A.getState().size()+B.getState().size();
+    		totalPrice = 0.0;
+    		for (String currentState : A.getState()){
+    			totalPrice += gasPrice.get(currentState);
+    		}
+    		for (String currentState : B.getState()){
+    			totalPrice += gasPrice.get(currentState);
+    		}
+    	}
+    	else{
+    		numberOfStates = sharedStates.size();
+    		totalPrice = 0.0;
+    		for (String currentState : sharedStates){
+    			totalPrice += gasPrice.get(currentState);
+    		}
+    	}
+    	double averageGas = (totalPrice/numberOfStates)/100;
+    	
+    	return averageGas;
     }
     
     public void addEdge(DirectedEdge e) {
