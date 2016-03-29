@@ -19,15 +19,13 @@ public class ConnectedCities {
 	private int V;               //number of vertices
 	private int E;                     //number of edges
 	public static ST<String, City> st; // City name-> City Object
-//	private City[] cities;  // index -> City
 	private EdgeWeightedDigraph G;
 	
 	
 	 /**  
      * Initializes an edge-weighted graph from an input stream.
      * @param  in the input stream
-     * @throws IndexOutOfBoundsException if the endpoints of any edge are not in prescribed range
-     * @throws IllegalArgumentException if the number of vertices or edges is negative
+     * @throws FileNotFoundException if the file is not in the dir
      */
     public ConnectedCities(String file)throws FileNotFoundException {
     	Scanner in = new Scanner(new File(file));
@@ -51,30 +49,6 @@ public class ConnectedCities {
        }
     	 in.close();
     	 setLALO("data/zips1990.csv");
-//    	 all the distances
-//    	 for (String currentCity:st.cityNames()){
-//    		 for (City B: st.get(currentCity).adj){
-//    			 System.out.println("The distance from "+currentCity+" to "+B.getName()+" is "+distance2B(st.get(currentCity),B));
-//    		 }	
-//    	 }
-    	 
- 
-//       G = new EdgeWeightedDigraph(st.size(),st);
-//       System.out.println(DFS(G, "NEW YORK CITY", "SAN FRANCISCO"));
-//       System.out.println(BFS(G, "NEW YORK CITY", "SAN FRANCISCO"));
-//       DijkstraSP shortestpath=new DijkstraSP(G,"SAN FRANCISCO");
-//       for(DirectedEdge e:shortestpath.pathTo("NEW YORK CITY")){
-//    	   System.out.print(e.from()+"->"+e.to()+",");
-//       }
-//       System.out.println();
- 
-       
-       
-//       for (DirectedEdge currentEdge: G.allEdges()){
-//    	   System.out.println(currentEdge.from()+" "+st.get(currentEdge.from()).getLongitude()+" "+st.get(currentEdge.from()).getLatitude());
-//    	   System.out.println(currentEdge.to()+" "+st.get(currentEdge.to()).getLongitude()+" "+st.get(currentEdge.to()).getLatitude());
-//    	   System.out.println(currentEdge);
-//       }
     }
     
     private static void setLALO(String file) throws FileNotFoundException{
@@ -172,7 +146,6 @@ public class ConnectedCities {
     
   public static void main(String[] args) throws IOException {
 	  PrintWriter writer = new PrintWriter("a3_out.txt");
-	  
 	  ConnectedCities a = new ConnectedCities("data/connectedCities.txt");
 	  EdgeWeightedDigraph G = new EdgeWeightedDigraph(ConnectedCities.st.size(),a.st);
 	  BufferedReader input = new BufferedReader(new FileReader(("data/a3_in.txt")));
@@ -180,13 +153,13 @@ public class ConnectedCities {
 	  String des = input.readLine().toUpperCase();
 	  input.close();
 	  
-	  
+	  String bfsR = BFS(G, src, des).toString();
+      writer.println("BFS: "+bfsR.substring(1, bfsR.length()-1));
       System.out.println(DFS(G, src, des));
       String dfsR = DFS(G, src, des).toString();
       writer.println("DFS: "+dfsR.substring(1, dfsR.length()-1));
       System.out.println(BFS(G, src, des));
-      String bfsR = BFS(G, src, des).toString();
-      writer.println("BFS: "+bfsR.substring(1, bfsR.length()-1));
+      writer.println();
       DijkstraSP shortestpath=new DijkstraSP(G,src);
       for(DirectedEdge e:shortestpath.pathTo(des)){
    	   System.out.print(e.from()+"->"+e.to()+",");
@@ -232,11 +205,15 @@ public class ConnectedCities {
       Double totalFuelCost = 0.0;
       Double currentTotal = currentGas + costOfMeal;
       String restInfo;
-      System.out.printf("%-15s%-70s%-15s%-15s%-15s","City","Meal Choice","Cost of Meal","Cost of Fuel","Current Total Cost");
+      System.out.printf("%-17s%-70s%-15s%-15s%-15s","City","Meal Choice","Cost of Meal","Cost of Fuel","Current Total Cost");
+      writer.printf("%-17s%-70s%-15s%-15s%-15s","City","Meal Choice","Cost of Meal","Cost of Fuel","Current Total Cost");
+      writer.println();
       System.out.println();
-      System.out.printf("%-15s%-70s%-15s%-15s%-15s",cityName,"N/A",costOfMeal,currentGas,currentTotal);
+      System.out.printf("%-17s%-70s%-15s%-15s%-15s",cityName,"N/A",costOfMeal,currentGas,currentTotal);
+      writer.printf("%-17s%-70s%-15s%-15s%-15s",cityName,"N/A",costOfMeal,currentGas,currentTotal);
       System.out.println();
-      for(DirectedEdge e:shortestpath.pathTo("MIAMI")){
+      writer.println();
+      for(DirectedEdge e:shortestpath.pathTo(des)){
     	  cityName = e.to();
     	  MealPlans currentMeal = minMeals.delMin();
     	  char name = currentMeal.getMealName().charAt(0);
@@ -256,12 +233,17 @@ public class ConnectedCities {
     	  totalFuelCost += currentGas;
     	  currentTotal = costOfMeal+currentGas;
     	  totalCost += currentTotal;
-    	  System.out.printf("%-15s%-70s%-15s%-15s%.2f",cityName,currentMeal,costOfMeal,currentGas,currentTotal);
+    	  System.out.printf("%-17s%-70s%-15s%-15s%.2f",cityName,currentMeal,costOfMeal,currentGas,currentTotal);
+    	  writer.printf("%-17s%-70s%-15s%-15s%.2f",cityName,currentMeal,costOfMeal,currentGas,currentTotal);
+    	  writer.println();
     	  System.out.println();
-    	  System.out.printf("%-15s%-15s","",restInfo);
+    	  System.out.printf("%-17s%-15s","",restInfo);
+    	  writer.printf("%-17s%-15s","",restInfo);
     	  System.out.println();
+    	  writer.println();
       }
-      System.out.printf("%-85s%-15s%-15s%.2f","Total:",totalMealCost,totalFuelCost,totalCost);
+      System.out.printf("%-87s%-15s%-15s%.2f","Total:",totalMealCost,totalFuelCost,totalCost);
+      writer.printf("%-87s%-15s%-15s%.2f","Total:",totalMealCost,totalFuelCost,totalCost);
       System.out.println();
       writer.close();
 
