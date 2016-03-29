@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
-
 
 
 public class ConnectedCities {
@@ -15,6 +18,7 @@ public class ConnectedCities {
 	private int E;                     //number of edges
 	private static ST<String, City> st; // City name-> City Object
 //	private City[] cities;  // index -> City
+	private EdgeWeightedDigraph G;
 	
 	
 	 /**  
@@ -53,12 +57,20 @@ public class ConnectedCities {
 //    	 }
     	 
  
-       EdgeWeightedDigraph G = new EdgeWeightedDigraph(st.size(),st);
-       for (DirectedEdge currentEdge: G.allEdges()){
-    	   System.out.println(currentEdge.from()+" "+st.get(currentEdge.from()).getLongitude()+" "+st.get(currentEdge.from()).getLatitude());
-    	   System.out.println(currentEdge.to()+" "+st.get(currentEdge.to()).getLongitude()+" "+st.get(currentEdge.to()).getLatitude());
-    	   System.out.println(currentEdge);
+       G = new EdgeWeightedDigraph(st.size(),st);
+       System.out.println(DFS(G, "NEW YORK CITY", "SAN FRANCISCO"));
+       System.out.println(BFS(G, "NEW YORK CITY", "SAN FRANCISCO"));
+       DijkstraSP shortestpath=new DijkstraSP(G,"SAN FRANCISCO");
+       for(DirectedEdge e:shortestpath.pathTo("NEW YORK CITY")){
+    	   System.out.print(e.from()+"->"+e.to()+",");
        }
+       System.out.println();
+       
+//       for (DirectedEdge currentEdge: G.allEdges()){
+//    	   System.out.println(currentEdge.from()+" "+st.get(currentEdge.from()).getLongitude()+" "+st.get(currentEdge.from()).getLatitude());
+//    	   System.out.println(currentEdge.to()+" "+st.get(currentEdge.to()).getLongitude()+" "+st.get(currentEdge.to()).getLatitude());
+//    	   System.out.println(currentEdge);
+//       }
     }
     
     private static void setLALO(String file) throws FileNotFoundException{
@@ -75,108 +87,82 @@ public class ConnectedCities {
     		}
     	}
     	in.close();
-    	st.printST();
+    //	st.printST();
     }
 
+    public static Iterable<String> DFS(EdgeWeightedDigraph G, String src, String des){
+    	ST<String,City> edgeTo = new ST<String, City>();
+    	ArrayList<String> visited = new ArrayList<String>();
+
+        dfs(G, src, visited, edgeTo);
+
+        if (visited.contains(des)){
+            ArrayList<String> path = new ArrayList<String>();
+            for (String i = des; !i.equals(src); i = edgeTo.get(i).getName())
+                path.add(i);
+            path.add(src);
+            Collections.reverse(path);
+            return path;
+        }else return null;
+    }
+
+    private static void dfs(EdgeWeightedDigraph G, String src, ArrayList<String> visited, ST<String,City> edgeTo){
+    	visited.add(src);
+    	for (City currentCity: st.get(src).adj){
+    		if (!visited.contains(currentCity.getName())){
+    			edgeTo.put(currentCity.getName(), st.get(src));
+    			dfs(G,currentCity.getName(),visited,edgeTo);
+    		}
+    	}
+    }
+
+    public static Iterable<String> BFS(EdgeWeightedDigraph G, String src, String des){
+   
+        ArrayList<String> visited = new ArrayList<String>();
+        ST<String,City> edgeTo = new ST<String,City>();
+      
+        bfs(G, src, visited, edgeTo);
+
+        if (visited.contains(des)){
+            ArrayList<String> path = new ArrayList<String>();
+            for (String i = des; !i.equals(src); i = edgeTo.get(i).getName())
+                path.add(i);
+            path.add(src);
+            Collections.reverse(path);
+            return path;
+        }else return null;
+        
+       
+    }
+
+    private static void bfs(EdgeWeightedDigraph G, String src,ArrayList<String> visited, ST<String,City> edgeTo){
+        // TODO: Verify the connectivity of the graph from src iteratively.
+    	Queue<String> queue = new ArrayDeque<String>();
+    	queue.add(src);
+    	visited.add(src);
+    	
+    	while(!queue.isEmpty()){
+    		String current = queue.poll();
+    		for (City child: st.get(current).adj){
+    			if(!visited.contains(child.getName())){
+    				queue.add(child.getName());
+    				edgeTo.put(child.getName(), st.get(current));
+    				visited.add(child.getName());
+    			}
+    		}
+    		
+    		
+    	}
+
+    }
     
-    public static void main(String[] args) throws FileNotFoundException {
-    	ConnectedCities a = new ConnectedCities("data/connectedCities.txt");
+  public static void main(String[] args) throws FileNotFoundException {
+	  ConnectedCities a = new ConnectedCities("data/connectedCities.txt");
     	
     	
     	
     }
 }
        
-       
-       
-//       while (in.hasNextLine()) {
-//           String[] a = in.nextLine().split(",");
-//           String cityA = a[0];
-//           String cityB = a[1].substring(1);
-//           City A = new City(cityA);
-//           City B = new City(cityB);
-//           int v = st.get(A);
-//           int w = st.get(B);
-//           G.addEdge(v,w,0);
-//         
-//       in.close();
-//   }
-
-       
-       
-       
-       
-       
-//       this.V=x.nextInt();
-//       this.E=x.nextInt();
-//       if (E < 0) throw new IllegalArgumentException("Number of edges must be nonnegative");
-//       adj=(LinkedList<Edge>[])new LinkedList[V];
-//       for(int i=0;i<V;i++){
-//			adj[i]=new LinkedList<Edge>();
-//		}
-//        
-//       for (int i = 0; i < E; i++) {
-//            int v = x.nextInt();
-//            int w = x.nextInt();
-//            double weight = x.nextDouble();
-//            Edge e = new Edge(v, w, weight);
-//            addEdge(e);
-//        }
-//        x.close();
-//    }
-//	
-//	
-//	public int V(){return V;}
-//	
-//	public int E(){return E;}
-//	
-//	public void addEdge(Edge e){
-//		int v=e.either();
-//		int w=e.other(v);
-//		adj[v].add(e);
-//		adj[w].add(e);
-//		E++;
-//	}
-//	
-//	public Iterable<Edge> adj(int v){
-//		return adj[v];
-//	}
-//	
-//	public int degree(int v) {
-//        return adj[v].size();
-//    }
-//	
-//	public Iterable<Edge> edges(){
-//		LinkedList<Edge> list=new LinkedList<Edge>();
-//		for(int v=0;v<V;v++){
-//			 int selfLoops = 0;
-//	         for (Edge e : adj(v)) {
-//	             if (e.other(v) > v) {
-//	                 list.add(e);
-//	             }
-//	             // only add one copy of each self loop (self loops will be consecutive)
-//	             else if (e.other(v) == v) {
-//	                 if (selfLoops % 2 == 0) list.add(e);
-//                     selfLoops++;
-//                }
-//	        }
-//		}
-//		return list;
-//	}
-//	
-//	public String toString() {
-//        StringBuilder s = new StringBuilder();
-//        s.append(V + " " + E + NEWLINE);
-//        for (int v = 0; v < V; v++) {
-//            s.append(v + ": ");
-//            for (Edge e : adj[v]) {
-//                s.append(e + "  ");
-//            }
-//            s.append(NEWLINE);
-//        }
-//        return s.toString();
-//    }
-
-	
-	
+      
 

@@ -13,7 +13,7 @@ public class EdgeWeightedDigraph {
     private int E;                      // number of edges in this digraph
     private int[] indegree;             // indegree[v] = indegree of vertex v
     private static final String NEWLINE = System.getProperty("line.separator");
-    private ST<String, City> st; // cityNames -> city object
+    public ST<String, City> st; // cityNames -> city object
     
     /**
      * Initializes an empty edge-weighted digraph with <tt>V</tt> vertices and 0 edges.
@@ -30,10 +30,14 @@ public class EdgeWeightedDigraph {
         for (String currentCity:st.cityNames()){
         	for (City B: st.get(currentCity).adj){
         		double weight = distance2B(st.get(currentCity),B);
-        		addEdge(new DirectedEdge(currentCity, B.getName(), weight));
-        		addEdge(new DirectedEdge(B.getName(),currentCity, weight));
+        		addEdge(new DirectedEdge(currentCity, B.getName(), weight*getGasPrice(st.get(currentCity), B)));
+        		addEdge(new DirectedEdge(B.getName(),currentCity, weight*getGasPrice(B,st.get(currentCity))));
         	}
         }
+    }
+    
+    private double getGasPrice(City A,City B){
+    	return 0.0;
     }
     
     public void addEdge(DirectedEdge e) {
@@ -53,6 +57,7 @@ public class EdgeWeightedDigraph {
         double d = radiusEarth * c; // Distance in km
         return d;
     }
+    
     private static double distance2B(City A,City B){
     	double lat1 = A.getLatitude();
     	double lon1 = A.getLongitude();
@@ -60,7 +65,6 @@ public class EdgeWeightedDigraph {
     	double lon2 = B.getLongitude();
     	return distance2B(lat1,lon1,lat2,lon2);
     }
-
 
     public int V() {
         return V;
