@@ -187,14 +187,6 @@ public class ST<Key, Value> {
 	        return st.size();
 	    }
 
-	    /**
-	     * Returns true if this symbol table is empty.
-	     *
-	     * @return <tt>true</tt> if this symbol table is empty and <tt>false</tt> otherwise
-	     */
-	    public boolean isEmpty() {
-	        return size() == 0;
-	    }
 
 	    /**
 	     * Returns all keys in this symbol table.
@@ -208,35 +200,5 @@ public class ST<Key, Value> {
 	        return st.keySet();
 	    }
 
-	    /**
-	     * Returns all of the keys in this symbol table.
-	     * To iterate over all of the keys in a symbol table named <tt>st</tt>, use the
-	     * foreach notation: <tt>for (Key key : st)</tt>.
-	     * <p>
-	     * This method is provided for backward compatibility with the version from
-	     * <em>Introduction to Programming in Java: An Interdisciplinary Approach.</em>
-	     *
-	     * @return     an iterator to all of the keys in this symbol table
-	     * @deprecated Replaced by {@link #keys()}.
-	     */
-	    public Iterator<Key> iterator() {
-	        return st.keySet().iterator();
-	    }
-
-	   
-	    /**
-	     * Returns the largest key in this symbol table less than or equal to <tt>key</tt>.
-	     *
-	     * @param  key the key
-	     * @return the largest key in this symbol table less than or equal to <tt>key</tt>
-	     * @throws NoSuchElementException if there is no such key
-	     * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
-	     */
-	    public Key floor(Key key) {
-	        if (key == null) throw new NullPointerException("called floor() with null key");
-	        Key k = st.floorKey(key);
-	        if (k == null) throw new NoSuchElementException("all keys are greater than " + key);
-	        return k;
-	    }
 }
 

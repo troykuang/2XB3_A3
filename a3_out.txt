@@ -1,18 +1,20 @@
-BFS: PORTLAND, SAN FRANCISCO, LOS ANGELES, LAS VEGAS, ALBUQUERQUE, DALLAS, SAN ANTONIO
-DFS: PORTLAND, SAN FRANCISCO, LOS ANGELES, LAS VEGAS, SALT LAKE CITY, DENVER, KANSAS CITY, SAINT LOUIS, INDIANAPOLIS, COLUMBUS, PITTSBURGH, NEW YORK CITY, PHILADELPHIA, BALTIMORE, FORT WASHINGTON, CHARLOTTE, ATLANTA, NEW ORLEANS, HOUSTON, DALLAS, SAN ANTONIO
+BFS: LAS VEGAS, SALT LAKE CITY, SEATTLE, MINNEAPOLIS, CHICAGO, COLUMBUS, PITTSBURGH, NEW YORK CITY
+DFS: LAS VEGAS, SALT LAKE CITY, DENVER, KANSAS CITY, SAINT LOUIS, INDIANAPOLIS, COLUMBUS, PITTSBURGH, NEW YORK CITY
 
 City             Meal Choice                                                           Cost of Meal   Cost of Fuel   Current Total Cost
-PORTLAND         N/A                                                                   0.0            0.0            0.0            
-SAN FRANCISCO    McDonald’s - McChicken - Meal                                         3.79           43.85          47.64
-                 715 Central Ave, Alameda,CA, (510) 865-0200
-LOS ANGELES      McDonald’s - Double Cheeseburger - Meal                               4.38           24.2           28.58
-                 29136 Roadside Dr, Agoura Hills,CA, (818) 889-2739
-PHOENIX          McDonald’s - Quarter Pounder with Cheese - Meal                       5.49           27.17          32.66
-                 1098 W Honda Bow Rd, Anthem,AZ, (623) 465-9282
-ALBUQUERQUE      McDonald’s - Filet-O-Fish - Meal                                      5.49           28.05          33.54
-                 3301 Coors Blvd Nw, Albuquerque,NM, (505) 831-1039
-DALLAS           Burger King - Double Cheeseburgers - Meal                             5.49           47.93          53.42
-                 604 W Mcdermott Dr, Allen,TX, (972) 727-6121
-SAN ANTONIO      McDonald’s - Southern Style Chicken - Meal                            5.59           21.93          27.52
-                 20290 I37 S, Elmendorf,TX, (210) 621-2509
-Total:                                                                                 30.23          193.13         223.36
+LAS VEGAS        N/A                                                                   0.0            0.0            0.0            
+DENVER           McDonald’s - McChicken - Meal                                         3.79           59.7           63.49
+                 14825 West 64th Ave, Arvada,CO, (303) 423-0912
+KANSAS CITY      McDonald’s - Double Cheeseburger - Meal                               4.38           49.25          53.63
+                 315 Kansas Ave, Fort Leavenworth,KS, (913) 651-9511
+SAINT LOUIS      McDonald’s - Quarter Pounder with Cheese - Meal                       5.49           19.17          24.66
+                 2901 Homer M Adams Pky, Alton,IL, (618) 462-8270
+INDIANAPOLIS     McDonald’s - Filet-O-Fish - Meal                                      5.49           19.69          25.18
+                 2910 Broadway St, Anderson,IN, (765) 640-8468
+COLUMBUS         Burger King - Double Cheeseburgers - Meal                             5.49           15.12          20.61
+                 23777 Us Highway 23 S, Circleville,OH, (740) 477-1467
+PITTSBURGH       McDonald’s - Southern Style Chicken - Meal                            5.59           14.97          20.56
+                 1305 Brodhead Rd, Aliquippa,PA, (724) 375-9511
+NEW YORK CITY    McDonald’s - Big Mac - Meal                                           5.69           28.09          33.78
+                 1058 High Ridge Rd, Stamford,CT, (203) 461-9565
+Total:                                                                                 35.92          205.99         241.91

@@ -137,11 +137,6 @@ public class MinPQ<Key> implements Iterable<Key> {
         return min;
     }
 
-
-   /***************************************************************************
-    * Helper functions to restore the heap invariant.
-    ***************************************************************************/
-
     private void swim(int k) {
         while (k > 1 && greater(k/2, k)) {
             exch(k, k/2);
@@ -159,9 +154,6 @@ public class MinPQ<Key> implements Iterable<Key> {
         }
     }
 
-   /***************************************************************************
-    * Helper functions for compares and swaps.
-    ***************************************************************************/
     private boolean greater(int i, int j) {
         if (comparator == null) {
             return ((Comparable<Key>) pq[i]).compareTo(pq[j]) > 0;

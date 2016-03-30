@@ -1,0 +1,12 @@
+Course Code: COMP SCI 2XB3
+Name: Chaoyi Kuang
+Student Number: 001402031
+March 29, 2016 The work being submitted by me is my individual work.
+
+Design Decisions:
+	1) In file zips1990.csv: East Pittsburgh is changed to Pittsburgh;
+							 New York is changed to New York City;
+							 Longitude and lattitude have been switched
+	2) In file connectedCities.txt: St. is changed to Saint
+	3) The main function is in ConnectedCities.java
+	4) Used Stack, Queue, MinPQ, LinkedList from Princeton website with some modifications. 

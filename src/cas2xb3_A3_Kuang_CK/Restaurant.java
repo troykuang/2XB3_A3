@@ -8,6 +8,11 @@ public class Restaurant {
 	private final double longitude;
 	private final String addNstateNtele;
 	
+	/**
+	 * the constructor of Restaurant
+	 * including detailed address of the restaurant and latitude, longitude
+	 * @param a
+	 */
 	public Restaurant(String a){
 		String[] info = a.split(",\"");
 		String[] coor = info[0].split(",");

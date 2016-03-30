@@ -30,6 +30,9 @@ public class ConnectedCities {
     public ConnectedCities(String file)throws FileNotFoundException {
     	Scanner in = new Scanner(new File(file));
     	st = new ST<String, City>();
+    	// Using a symbol table to associate the name of city (String)
+    	// with the actual city object 
+    	// Read from file and create City Objects
     	while (in.hasNextLine()) {
            String[] a = in.nextLine().split("\\), ");
            String cityA = a[0].toUpperCase();
@@ -42,15 +45,21 @@ public class ConnectedCities {
            if (!st.contains(B.getName())){
         	   st.put(B.getName(),B);
            }
+           // A is adjacent to B
+           // B is adjacent to A
            st.get(A.getName()).adj.add(st.get(B.getName()));
            st.get(B.getName()).adj.add(st.get(A.getName()));
-           
-           
        }
     	 in.close();
+    	 // Set longitude and latitude of cities
     	 setLALO("data/zips1990.csv");
     }
     
+    /**
+     * A method that set all the coordinates of cities=
+     * @param file zips1990.csv
+     * @throws FileNotFoundException
+     */
     private static void setLALO(String file) throws FileNotFoundException{
     	Scanner in = new Scanner(new File(file));
     	while (in.hasNextLine()) {
@@ -68,12 +77,14 @@ public class ConnectedCities {
     //	st.printST();
     }
 
+    // DFS
     public static Iterable<String> DFS(EdgeWeightedDigraph G, String src, String des){
     	ST<String,City> edgeTo = new ST<String, City>();
     	ArrayList<String> visited = new ArrayList<String>();
-
+    	// Explore the whole graph and create paths
         dfs(G, src, visited, edgeTo);
-
+        // Destination can be reached
+        // Return the path
         if (visited.contains(des)){
             ArrayList<String> path = new ArrayList<String>();
             for (String i = des; !i.equals(src); i = edgeTo.get(i).getName())
@@ -86,6 +97,7 @@ public class ConnectedCities {
 
     private static void dfs(EdgeWeightedDigraph G, String src, ArrayList<String> visited, ST<String,City> edgeTo){
     	visited.add(src);
+    	// visited all the unvisited cities and add them to visited
     	for (City currentCity: st.get(src).adj){
     		if (!visited.contains(currentCity.getName())){
     			edgeTo.put(currentCity.getName(), st.get(src));
@@ -94,13 +106,14 @@ public class ConnectedCities {
     	}
     }
 
+    //BFS
     public static Iterable<String> BFS(EdgeWeightedDigraph G, String src, String des){
    
         ArrayList<String> visited = new ArrayList<String>();
         ST<String,City> edgeTo = new ST<String,City>();
-      
         bfs(G, src, visited, edgeTo);
-
+        // Destination can be reached
+        // Return the path
         if (visited.contains(des)){
             ArrayList<String> path = new ArrayList<String>();
             for (String i = des; !i.equals(src); i = edgeTo.get(i).getName())
@@ -117,7 +130,7 @@ public class ConnectedCities {
     	Queue<String> queue = new ArrayDeque<String>();
     	queue.add(src);
     	visited.add(src);
-    	
+    	//Explore all the nodes are at the same level
     	while(!queue.isEmpty()){
     		String current = queue.poll();
     		for (City child: st.get(current).adj){
@@ -131,7 +144,8 @@ public class ConnectedCities {
 
     }
     
-  public static String getRestaurantInfo(String cityName, ArrayList<Restaurant> places){
+    // Find the restaurant that is located within 0.5 degrees of latitude and 0.5 degrees of longitude of the city.
+    public static String getRestaurantInfo(String cityName, ArrayList<Restaurant> places){
 	  Double cityLon = st.get(cityName).getLongitude();
 	  Double cityLat = st.get(cityName).getLatitude();
 	  for (Restaurant current : places){
@@ -144,11 +158,12 @@ public class ConnectedCities {
 	  return null;
   }
     
-  public static void main(String[] args) throws IOException {
+   public static void main(String[] args) throws IOException {
 	  PrintWriter writer = new PrintWriter("a3_out.txt");
 	  ConnectedCities a = new ConnectedCities("data/connectedCities.txt");
 	  EdgeWeightedDigraph G = new EdgeWeightedDigraph(ConnectedCities.st.size(),a.st);
 	  BufferedReader input = new BufferedReader(new FileReader(("data/a3_in.txt")));
+	  // Convert all the charts to uppercase
 	  String src = input.readLine().toUpperCase();
 	  String des = input.readLine().toUpperCase();
 	  input.close();
@@ -166,7 +181,7 @@ public class ConnectedCities {
       }
       System.out.println();
       MinPQ<MealPlans> minMeals = new MinPQ<MealPlans>();
-     
+     // 3 ArrayLists for restaurant 
       ArrayList<Restaurant> BK = new ArrayList<Restaurant>();
       ArrayList<Restaurant> WD = new ArrayList<Restaurant>();
       ArrayList<Restaurant> MD = new ArrayList<Restaurant>();
@@ -193,6 +208,9 @@ public class ConnectedCities {
       md.close();
       
       Scanner in = new Scanner(new File(("data/menu.csv")));
+      // Put all the meals in a MinPQ
+      // We decide what to eat and which restaurant to eat first
+      // Then look back to restaurant location files to find the right restaurant
       while (in.hasNextLine()) {
     	  MealPlans currentMeal = new MealPlans(in.nextLine());
     	  minMeals.insert(currentMeal);
@@ -216,6 +234,7 @@ public class ConnectedCities {
       for(DirectedEdge e:shortestpath.pathTo(des)){
     	  cityName = e.to();
     	  MealPlans currentMeal = minMeals.delMin();
+    	  // Find which restaurant to eat
     	  char name = currentMeal.getMealName().charAt(0);
     	  if (name == 'M'){
     		  restInfo = getRestaurantInfo(cityName, MD);
@@ -233,6 +252,7 @@ public class ConnectedCities {
     	  totalFuelCost += currentGas;
     	  currentTotal = costOfMeal+currentGas;
     	  totalCost += currentTotal;
+    	  // Print out all the formatted details
     	  System.out.printf("%-17s%-70s%-15s%-15s%.2f",cityName,currentMeal,costOfMeal,currentGas,currentTotal);
     	  writer.printf("%-17s%-70s%-15s%-15s%.2f",cityName,currentMeal,costOfMeal,currentGas,currentTotal);
     	  writer.println();
@@ -248,9 +268,6 @@ public class ConnectedCities {
       writer.close();
       in.close();
 
-    	
-    	
-    	
     }
 }
        

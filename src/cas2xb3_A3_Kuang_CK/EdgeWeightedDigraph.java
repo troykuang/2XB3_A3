@@ -1,34 +1,31 @@
 package cas2xb3_A3_Kuang_CK;
 
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 public class EdgeWeightedDigraph {
   
     private final int V;                // number of vertices in this digraph
     private int E;                      // number of edges in this digraph
-    private int[] indegree;             // indegree[v] = indegree of vertex v
     private static final String NEWLINE = System.getProperty("line.separator");
     public ST<String, City> st; // cityNames -> city object
     
     /**
-     * Initializes an empty edge-weighted digraph with <tt>V</tt> vertices and 0 edges.
+     * Initializes an empty edge-weighted digraph
      *
      * @param  V the number of vertices
      * @throws FileNotFoundException 
-     * @throws IllegalArgumentException if <tt>V</tt> < 0
+     * 
      */
     public EdgeWeightedDigraph(int V, ST<String, City> st) throws FileNotFoundException {
         if (V < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
         this.V = V;
         this.E = 0;
         this.st = st;
-        
+        // According the assignment description: fuel efficiency is 8.2L/100km
+        // The weight of each edge would be: distance * gas price * fuel efficiency
         for (String currentCity:st.cityNames()){
         	for (City B: st.get(currentCity).adj){
         		double weight = distance2B(st.get(currentCity),B);
@@ -39,6 +36,8 @@ public class EdgeWeightedDigraph {
     }
     
     private double getGasPrice(City A,City B) throws FileNotFoundException{
+    	// Read StateGasPrice.csv
+    	// Using a symbol table to associate all the state abbr(String) with gas price
     	ST<String,Double> gasPrice = new ST<String,Double>();
     	Scanner in = new Scanner(new File(("data/StateGasPrice.csv")));
     	while (in.hasNextLine()) {
@@ -47,6 +46,7 @@ public class EdgeWeightedDigraph {
     	}
     	in.close();
     	ArrayList<String> sharedStates = new ArrayList<String>();
+    	// find if city A and city B are in the same state
     	for (String a : A.getState() ){
     		if (B.getState().contains(a)){
     			sharedStates.add(a);
@@ -54,6 +54,7 @@ public class EdgeWeightedDigraph {
     	}
     	int numberOfStates = 0;
 		double totalPrice = 0.0;
+		// Take average of all the states
     	if (sharedStates.size() == 0){
     		numberOfStates = A.getState().size()+B.getState().size();
     		totalPrice = 0.0;
@@ -76,6 +77,7 @@ public class EdgeWeightedDigraph {
     	return averageGas;
     }
     
+    // Add an directed edge to the graph
     public void addEdge(DirectedEdge e) {
         String v = e.from();
         String w = e.to();
@@ -83,6 +85,7 @@ public class EdgeWeightedDigraph {
         st.get(w).edges.add(e);
     }
     
+    // Calculate the distance(km) between two points on earth
     private static double distance2B(double lat1, double lon1, double lat2, double lon2){
     	double radiusEarth = 6371;
     	double deg2rad = 0.017453292519943295;
@@ -93,7 +96,7 @@ public class EdgeWeightedDigraph {
         double d = radiusEarth * c; // Distance in km
         return d;
     }
-    
+ // Calculate the distance(km) between two cities
     private static double distance2B(City A,City B){
     	double lat1 = A.getLatitude();
     	double lon1 = A.getLongitude();
@@ -146,10 +149,10 @@ public class EdgeWeightedDigraph {
         return list;
     } 
     
-	public static void main(String[] args) {
-		
-		System.out.println(distance2B(44.981562,93.23928,40.785697,111.929054));
-	}
+//	public static void main(String[] args) {
+//		
+//		System.out.println(distance2B(44.981562,93.23928,40.785697,111.929054));
+//	}
 
     
 
