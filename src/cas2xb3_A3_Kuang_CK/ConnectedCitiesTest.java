@@ -13,9 +13,12 @@ import org.junit.Test;
 
 public class ConnectedCitiesTest {
 	private EdgeWeightedDigraph G;
+	private ConnectedCities a;
 
 	@Before
 	public void setUp() throws Exception {
+		a = new ConnectedCities("data/connectedCities.txt");
+		G = new EdgeWeightedDigraph(ConnectedCities.st.size(),a.st);
 	}
 
 	@After
@@ -24,24 +27,40 @@ public class ConnectedCitiesTest {
 
 	@Test
 	public void testDFS() throws FileNotFoundException {
-		ConnectedCities a = new ConnectedCities("data/connectedCities.txt");
-		G = new EdgeWeightedDigraph(a.st.size(),a.st);
-		Iterable<String> dfs = ConnectedCities.DFS(G,"New York City","Miami");
-		System.out.println(dfs);
-		int dfsCount = 0;
+		String dfsR = ConnectedCities.DFS(G, "NEW YORK CITY", "MIAMI").toString();
+		String dfs = dfsR.substring(1, dfsR.length()-1);
+		System.out.println("DFS: "+dfs);
 		Set<String> s = new HashSet<String>();
-		for (String current : dfs){
-			dfsCount++;
+		String[] cities = dfs.split(", ");
+		for (String current : cities){
 			s.add(current);
 		}
 		int setCount = s.size();
-		assertTrue(setCount == dfsCount);
+		assertTrue(setCount == cities.length);
+		
+
+		for (int i=0;i<cities.length-1;i++){
+		assertTrue(a.st.get(cities[i]).adj.contains(a.st.get(cities[i+1])));
+		}
 		
 	}
 
 	@Test
 	public void testBFS() {
-		fail("Not yet implemented");
+		String bfsR = ConnectedCities.BFS(G, "NEW YORK CITY", "MIAMI").toString();
+		String bfs = bfsR.substring(1, bfsR.length()-1);
+		System.out.println("BFS: "+bfs);
+		Set<String> s = new HashSet<String>();
+		String[] cities = bfs.split(", ");
+		for (String current : cities){
+			s.add(current);
+		}
+		int setCount = s.size();
+		assertTrue(setCount == cities.length);
+		
+		for (int i=0;i<cities.length-1;i++){
+			assertTrue(a.st.get(cities[i]).adj.contains(a.st.get(cities[i+1])));
+			}
 	}
 
 }

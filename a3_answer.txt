@@ -1,4 +1,4 @@
-3.1: Weighted Directed Graph is used to implement this project. Each node in the graph is a city and each weighted directed 
+ 3.1: Weighted Directed Graph is used to implement this project. Each node in the graph is a city and each weighted directed 
 	 edge is the connection between two cities. The weights of the edges are the cost of fuel spent on these trips. Using
 	 DFS/ BFS to find a path from start city to the destination city. Class ConnectedCities utilizes a symbol table to associate
 	 each City Object with the name of the city (String). Dijkstra's algorithm is used to find the shortest path, In order
@@ -9,5 +9,14 @@
 	 and 0.5 degrees of longitude of the city. All the restaurant information are stored in 3 ArrayList, one restaurant each
 	 ArrayList. And lastly, we print out all destination city(edge.to()) info to output file.
 	 
-3.2: BFS and DFS don't return the same result.BFS finds the result in fewer steps. And this will remain true if the the number
-	 of cities increases. 
+3.2: BFS and DFS don't return the same result. BFS finds the result in fewer steps. And this will remain true if the the number
+	 of cities increases. If the number of cities increases and if the destination is closer to the source the the BFS is faster
+	 returning fewer steps. In general, BFS uses more space.
+	 
+3.4: The complexity of this problem is E*logV where E is the total number of edges and V is the number of vertices. Each vertex
+	 can be connected to (V-1) vertices --> O(V). Finding and relaxing each adjacent vertex's weight in a binary min heap is O(logV).
+	 And there are E edges in total, hence the complexity is O(ElogV). The complexity only depends on the data structure we choose,
+	 in this case, it's just weighted graph + binary min heap. So the complexity wouldn't change when the number of cities increases
+	 or the number of stops or number of restaurants.
+	 
+	

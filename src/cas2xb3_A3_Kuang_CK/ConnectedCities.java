@@ -246,6 +246,7 @@ public class ConnectedCities {
       writer.printf("%-87s%-15s%-15s%.2f","Total:",totalMealCost,totalFuelCost,totalCost);
       System.out.println();
       writer.close();
+      in.close();
 
     	
     	
